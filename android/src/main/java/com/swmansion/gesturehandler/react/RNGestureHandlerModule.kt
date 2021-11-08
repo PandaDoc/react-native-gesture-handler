@@ -3,6 +3,7 @@ package com.swmansion.gesturehandler.react
 import android.content.Context
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.util.Log
 import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
@@ -11,6 +12,7 @@ import com.facebook.react.uimanager.UIBlock
 import com.facebook.react.uimanager.UIManagerModule
 import com.swmansion.gesturehandler.*
 import java.util.*
+import java.lang.Exception
 
 @ReactModule(name = RNGestureHandlerModule.MODULE_NAME)
 class RNGestureHandlerModule(reactContext: ReactApplicationContext?) : ReactContextBaseJavaModule(reactContext) {
@@ -339,9 +341,13 @@ class RNGestureHandlerModule(reactContext: ReactApplicationContext?) : ReactCont
 
   @ReactMethod
   fun attachGestureHandler(handlerTag: Int, viewTag: Int) {
-    tryInitializeHandlerForReactRootView(viewTag)
-    if (!registry.attachHandlerToView(handlerTag, viewTag)) {
-      throw JSApplicationIllegalArgumentException("Handler with tag $handlerTag does not exists")
+    try {
+      tryInitializeHandlerForReactRootView(viewTag)
+      if (!registry.attachHandlerToView(handlerTag, viewTag)) {
+        throw JSApplicationIllegalArgumentException("Handler with tag $handlerTag does not exists")
+      }
+    } catch (e: Exception) {
+      Log.e("attachGestureHandler#tryInitializeHandlerForReactRootView", "exception", e)
     }
   }
 
