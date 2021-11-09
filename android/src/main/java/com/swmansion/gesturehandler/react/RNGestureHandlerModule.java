@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.util.Log;
 
 import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
@@ -33,6 +34,7 @@ import com.swmansion.gesturehandler.TapGestureHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.lang.Exception;
 
 import androidx.annotation.Nullable;
 
@@ -484,10 +486,14 @@ public class RNGestureHandlerModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void attachGestureHandler(int handlerTag, int viewTag) {
-    tryInitializeHandlerForReactRootView(viewTag);
-    if (!mRegistry.attachHandlerToView(handlerTag, viewTag)) {
-      throw new JSApplicationIllegalArgumentException(
-              "Handler with tag " + handlerTag + " does not exists");
+    try {
+      tryInitializeHandlerForReactRootView(viewTag);
+      if (!mRegistry.attachHandlerToView(handlerTag, viewTag)) {
+        throw new JSApplicationIllegalArgumentException(
+                "Handler with tag " + handlerTag + " does not exists");
+      }
+    } catch (Exception e) {
+      Log.e("attachGestureHandler#tryInitializeHandlerForReactRootView", "exception", e);
     }
   }
 
